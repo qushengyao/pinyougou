@@ -55,11 +55,11 @@ app.controller('specificationOptionController' ,function($scope,$controller   ,s
 	//批量删除 
 	$scope.dele=function(){			
 		//获取选中的复选框			
-		specificationOptionService.dele( $scope.selectIds ).success(
+		specificationOptionService.dele( $scope.listId ).success(
 			function(response){
 				if(response.success){
 					$scope.reloadList();//刷新列表
-					$scope.selectIds=[];
+					$scope.listId=[];
 				}						
 			}		
 		);				

@@ -55,11 +55,11 @@ app.controller('goodsDescController' ,function($scope,$controller   ,goodsDescSe
 	//批量删除 
 	$scope.dele=function(){			
 		//获取选中的复选框			
-		goodsDescService.dele( $scope.selectIds ).success(
+		goodsDescService.dele( $scope.listId ).success(
 			function(response){
 				if(response.success){
 					$scope.reloadList();//刷新列表
-					$scope.selectIds=[];
+					$scope.listId=[];
 				}						
 			}		
 		);				

@@ -1,6 +1,11 @@
 package com.pinyougou.manager.controller;
+import java.util.Arrays;
 import java.util.List;
 
+import com.pinyougou.page.service.ItemPageService;
+import com.pinyougou.pojo.TbItem;
+import com.pinyougou.pojogroup.Goods;
+import com.pinyougou.search.service.ItemSearchService;
 import com.pinyougou.sellergoods.service.GoodsService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,13 +27,16 @@ public class GoodsController {
 
 	@Reference
 	private GoodsService goodsService;
+
+	@Reference
+	private ItemPageService itemPageService;
 	
 	/**
 	 * 返回全部列表
 	 * @return
 	 */
 	@RequestMapping("/findAll")
-	public List<TbGoods> findAll(){			
+	public List<TbGoods> findAll(){
 		return goodsService.findAll();
 	}
 	
@@ -47,16 +55,16 @@ public class GoodsController {
 	 * @param goods
 	 * @return
 	 */
-	@RequestMapping("/add")
-	public Result add(@RequestBody TbGoods goods){
-		try {
-			goodsService.add(goods);
-			return new Result(true, "增加成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Result(false, "增加失败");
-		}
-	}
+//	@RequestMapping("/add")
+//	public Result add(@RequestBody TbGoods goods){
+//		try {
+//			goodsService.add(goods);
+//			return new Result(true, "增加成功");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return new Result(false, "增加失败");
+//		}
+//	}
 	
 	/**
 	 * 修改
@@ -64,7 +72,7 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public Result update(@RequestBody TbGoods goods){
+	public Result update(@RequestBody Goods goods){
 		try {
 			goodsService.update(goods);
 			return new Result(true, "修改成功");
@@ -80,7 +88,7 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/findOne")
-	public TbGoods findOne(Long id){
+	public Goods findOne(Long id){
 		return goodsService.findOne(id);		
 	}
 	
@@ -93,6 +101,7 @@ public class GoodsController {
 	public Result delete(Long [] ids){
 		try {
 			goodsService.delete(ids);
+			itemSearchService.deleteByGoodsIds(Arrays.asList(ids));
 			return new Result(true, "删除成功"); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,5 +120,33 @@ public class GoodsController {
 	public PageResult search(@RequestBody TbGoods goods, int page, int rows  ){
 		return goodsService.findPage(goods, page, rows);		
 	}
+
+	@Reference
+	private ItemSearchService itemSearchService;
+
+	@RequestMapping("/updateStatus")
+	public Result updateStatus(Long[] ids , String status){
+		try {
+			goodsService.updateStatus(ids,status);
+			if ("1".equals(status)){
+				List<TbItem> list = goodsService.findItemListByGoodsIdListAndStatus(ids, status);
+				itemSearchService.importList(list);
+
+				for (Long id : ids) {
+					itemPageService.genItemHtml(id);
+				}
+			}
+			return new Result(true, "修改成功");
+		}catch (Exception e){
+			e.printStackTrace();
+			return new Result(false, "修改失败");
+
+		}
+
+	}
+
+
+
+
 	
 }

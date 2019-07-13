@@ -79,8 +79,10 @@
 				                          <td>{{pojo.id}}</td>
 									      <td>{{pojo.name}}</td>
 									      <td>{{pojo.typeId}}</td>
-		                                  <td class="text-center">		                                     
-		                                      <button type="button" class="btn bg-olive btn-xs" ng-click="getGrade(grade+1);selectList(pojo)" >查询下级</button>
+		                                  <td class="text-center">
+											  <span ng-if="grade != 3">
+												   <button type="button" class="btn bg-olive btn-xs"  ng-click="getGrade(grade+1);selectList(pojo)" >查询下级</button>
+											  </span>
 		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal"  ng-click="findOne(pojo.id);selectListByType()">修改</button>
 		                                  </td>
 			                          </tr>
@@ -122,8 +124,8 @@
 				<tr>
 		      		<td>类型模板</td>
 		      		<td>
-		      			<!--<input select2 config="options['type_template']" ng-model="entity.id" placeholder="商品类型模板" class="form-control" type="text"/>-->
-						<select ng-model="entity.typeId" class="form-control" config="options['type_template']">
+		      			<!--<input select2 properties="options['type_template']" ng-model="entity.id" placeholder="商品类型模板" class="form-control" type="text"/>-->
+						<select ng-model="entity.typeId" class="form-control" >
 							<option ng-repeat="list in typeList" value="{{list.id}}">{{list.text}}</option>
 						</select>
 		      		</td>
