@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.query.Query;
+import org.springframework.data.solr.core.query.SimpleFacetQuery;
+import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.SolrDataQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,10 +40,17 @@ public class SolrUtil {
         solrTemplate.commit();
     }
 
+    public void deleSolr(){
+        Query query = new SimpleQuery("*:*");
+        solrTemplate.delete(query);
+        solrTemplate.commit();
+    }
+
     public static void main(String[] args) {
         ApplicationContext context= new ClassPathXmlApplicationContext("classpath*:spring/applicationContext*.xml");
         SolrUtil solrUtil=  (SolrUtil) context.getBean("solrUtil");
-        solrUtil.andSolr();
+//        solrUtil.andSolr();
+        solrUtil.deleSolr();
     }
 
 }

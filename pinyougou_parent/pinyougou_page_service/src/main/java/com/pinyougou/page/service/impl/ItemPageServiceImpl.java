@@ -90,4 +90,12 @@ public class ItemPageServiceImpl implements ItemPageService {
 
 
     }
+
+    @Override
+    public void deleteHtml(Long[] goodsIds) {
+
+            for (Long goodsId : goodsIds) {
+                new File(pagedir + goodsId + ".html").delete();
+            }
+    }
 }
